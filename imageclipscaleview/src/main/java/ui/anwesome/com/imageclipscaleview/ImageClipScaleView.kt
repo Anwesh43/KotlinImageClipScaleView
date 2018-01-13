@@ -3,6 +3,7 @@ package ui.anwesome.com.imageclipscaleview
 /**
  * Created by anweshmishra on 14/01/18.
  */
+import android.app.Activity
 import android.content.*
 import android.graphics.*
 import android.view.*
@@ -136,6 +137,13 @@ class ImageClipScaleView(ctx:Context,var bitmap:Bitmap):View(ctx) {
             container?.startUpdating {
                 animator.start()
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity,bitmap: Bitmap):ImageClipScaleView {
+            val view = ImageClipScaleView(activity,bitmap)
+            activity.setContentView(view)
+            return view
         }
     }
 }
