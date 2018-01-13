@@ -26,20 +26,23 @@ class ImageClipScaleView(ctx:Context,var bitmap:Bitmap):View(ctx) {
     data class ImageClipScale(var x:Float,var y:Float,var size:Float) {
         var pixels:LinkedList<Pixel> = LinkedList()
         fun draw(canvas:Canvas,paint:Paint,bitmap:Bitmap,scale:Float) {
-            if(pixels.size == 0) {
-                for(i in 0..size.toInt()-1) {
-                    for(j in 0..size.toInt()-1) {
-                        val pixel = Pixel(x+i,y+i,bitmap.getPixel(x.toInt()+i,y.toInt()+j))
-                        pixels.add(pixel)
-                    }
-                }
-            }
+//            if(pixels.size == 0) {
+//                for(i in 0..size.toInt()-1) {
+//                    for(j in 0..size.toInt()-1) {
+//                        val pixel = Pixel(x+i,y+j,bitmap.getPixel(x.toInt()+i,y.toInt()+j))
+//                        pixels.add(pixel)
+//                    }
+//                }
+//            }
+            canvas.save()
             val path = Path()
             path.addRect(RectF(x,y,x+size*scale,y+size*scale),Path.Direction.CW)
             canvas.clipPath(path)
-            pixels.forEach {
-                it.draw(canvas,paint)
-            }
+//            pixels.forEach {
+//                it.draw(canvas,paint)
+//            }
+            canvas.drawBitmap(bitmap,0f,0f,paint)
+            canvas.restore()
         }
     }
     data class Pixel(var x:Float,var y:Float,var pixel:Int) {
@@ -73,9 +76,7 @@ class ImageClipScaleView(ctx:Context,var bitmap:Bitmap):View(ctx) {
             val gap = w/10
             for(i in 0..9) {
                 for(j in 0..9) {
-                    val x_factor = i%10
-                    val y_factor = i/10
-                    images.add(ImageClipScale(gap*x_factor,gap*y_factor,gap))
+                    images.add(ImageClipScale(gap*j,gap*i,gap))
                 }
             }
         }
