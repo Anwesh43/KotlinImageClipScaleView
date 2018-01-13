@@ -63,4 +63,30 @@ class ImageClipScaleView(ctx:Context,var bitmap:Bitmap):View(ctx) {
             }
         }
     }
+    data class ImageClipContainer(var w:Float,var bitmap:Bitmap) {
+        val state = State()
+        val images:LinkedList<ImageClipScale> = LinkedList()
+        init {
+            bitmap = Bitmap.createScaledBitmap(bitmap,w.toInt(),w.toInt(),true)
+            val gap = w/10
+            for(i in 0..9) {
+                for(j in 0..9) {
+                    val x_factor = i%10
+                    val y_factor = i/10
+                    images.add(ImageClipScale(gap*x_factor,gap*y_factor,gap))
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            images.forEach {
+                it.draw(canvas,paint,bitmap,state.scale)
+            }
+        }
+        fun update(stopcb:(Float)->Unit) {
+            state.update(stopcb)
+        }
+        fun startUpdating(startcb:()->Unit) {
+            state.startUpdating(startcb)
+        }
+    }
 }
