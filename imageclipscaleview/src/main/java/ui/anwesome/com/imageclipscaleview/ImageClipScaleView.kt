@@ -114,4 +114,27 @@ class ImageClipScaleView(ctx:Context,var bitmap:Bitmap):View(ctx) {
             }
         }
     }
+    data class Renderer(var view:ImageClipScaleView,var time:Int = 0) {
+        var container:ImageClipContainer?=null
+        val animator = Animator(view)
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                container = ImageClipContainer(w,view.bitmap)
+            }
+            canvas.drawColor(Color.parseColor("#212121"))
+            container?.draw(canvas,paint)
+            time++
+            animator.animate {
+                container?.update {
+                    animator.stop()
+                }
+            }
+        }
+        fun handleTap() {
+            container?.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
